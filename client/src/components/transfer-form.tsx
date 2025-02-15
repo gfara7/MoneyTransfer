@@ -17,6 +17,7 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { SendIcon, RefreshCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 type ExchangeRate = {
   rate: number;
@@ -26,6 +27,8 @@ type ExchangeRate = {
 
 export default function TransferForm() {
   const { toast } = useToast();
+  const { t } = useTranslation();
+
   const form = useForm<Transfer>({
     resolver: zodResolver(transferSchema),
     defaultValues: {
@@ -48,13 +51,13 @@ export default function TransferForm() {
       queryClient.invalidateQueries({ queryKey: ["/api/account"] });
       queryClient.invalidateQueries({ queryKey: ["/api/transactions"] });
       toast({
-        title: "Transfer successful",
-        description: "Money has been sent successfully",
+        title: t("transferSuccess"),
+        description: t("transferSuccessMessage"),
       });
     },
     onError: (error: Error) => {
       toast({
-        title: "Transfer failed",
+        title: t("transferFailed"),
         description: error.message,
         variant: "destructive",
       });
@@ -66,7 +69,7 @@ export default function TransferForm() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <SendIcon className="h-5 w-5" />
-          Send Money
+          {t("sendMoney")}
         </CardTitle>
       </CardHeader>
       <CardContent>
@@ -75,7 +78,7 @@ export default function TransferForm() {
           className="space-y-4"
         >
           <div className="space-y-2">
-            <Label htmlFor="toUsername">Recipient Username</Label>
+            <Label htmlFor="toUsername">{t("recipientUsername")}</Label>
             <Input
               id="toUsername"
               {...form.register("toUsername")}
@@ -84,7 +87,7 @@ export default function TransferForm() {
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="amount">Amount</Label>
+              <Label htmlFor="amount">{t("amount")}</Label>
               <Input
                 id="amount"
                 type="number"
@@ -95,13 +98,13 @@ export default function TransferForm() {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="currency">Currency</Label>
+              <Label htmlFor="currency">{t("currency")}</Label>
               <Select
                 onValueChange={(value) => form.setValue("currency", value)}
                 defaultValue={form.watch("currency")}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Select currency" />
+                  <SelectValue placeholder={t("selectCurrency")} />
                 </SelectTrigger>
                 <SelectContent>
                   {SUPPORTED_CURRENCIES.map((currency) => (
@@ -117,16 +120,20 @@ export default function TransferForm() {
           {isLoadingRate ? (
             <div className="text-sm text-muted-foreground flex items-center gap-2">
               <RefreshCcw className="h-4 w-4 animate-spin" />
-              Loading exchange rate...
+              {t("loadingRate")}
             </div>
           ) : exchangeRate && (
             <div className="text-sm text-muted-foreground">
-              Exchange Rate: 1 {exchangeRate.fromCurrency} = {exchangeRate.rate.toFixed(6)} {exchangeRate.toCurrency}
+              {t("exchangeRateText", {
+                from: exchangeRate.fromCurrency,
+                rate: exchangeRate.rate.toFixed(6),
+                to: exchangeRate.toCurrency
+              })}
             </div>
           )}
 
           <div className="space-y-2">
-            <Label htmlFor="description">Description (Optional)</Label>
+            <Label htmlFor="description">{t("description")}</Label>
             <Textarea
               id="description"
               {...form.register("description")}
@@ -137,7 +144,7 @@ export default function TransferForm() {
             className="w-full"
             disabled={transferMutation.isPending}
           >
-            {transferMutation.isPending ? "Sending..." : "Send Money"}
+            {transferMutation.isPending ? t("sending") : t("send")}
           </Button>
         </form>
       </CardContent>

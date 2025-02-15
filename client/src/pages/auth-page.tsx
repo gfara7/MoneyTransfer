@@ -9,9 +9,12 @@ import { insertUserSchema, InsertUser } from "@shared/schema";
 import { useAuth } from "@/hooks/use-auth";
 import { Redirect } from "wouter";
 import { Building } from "lucide-react";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/language-switcher";
 
 export default function AuthPage() {
   const { user, loginMutation, registerMutation } = useAuth();
+  const { t } = useTranslation();
 
   const loginForm = useForm<InsertUser>({
     resolver: zodResolver(insertUserSchema),
@@ -30,15 +33,18 @@ export default function AuthPage() {
       <div className="flex items-center justify-center p-8">
         <Card className="w-full max-w-md">
           <CardHeader className="space-y-1">
-            <CardTitle className="text-2xl text-center">
-              Welcome to MoneyTransfer
-            </CardTitle>
+            <div className="flex justify-between items-center">
+              <CardTitle className="text-2xl">
+                {t("welcome")}
+              </CardTitle>
+              <LanguageSwitcher />
+            </div>
           </CardHeader>
           <CardContent>
             <Tabs defaultValue="login" className="space-y-4">
               <TabsList className="grid w-full grid-cols-2">
-                <TabsTrigger value="login">Login</TabsTrigger>
-                <TabsTrigger value="register">Register</TabsTrigger>
+                <TabsTrigger value="login">{t("login")}</TabsTrigger>
+                <TabsTrigger value="register">{t("register")}</TabsTrigger>
               </TabsList>
 
               <TabsContent value="login">
@@ -49,7 +55,7 @@ export default function AuthPage() {
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="username">Username</Label>
+                    <Label htmlFor="username">{t("username")}</Label>
                     <Input
                       id="username"
                       {...loginForm.register("username")}
@@ -57,7 +63,7 @@ export default function AuthPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">{t("password")}</Label>
                     <Input
                       id="password"
                       type="password"
@@ -70,7 +76,7 @@ export default function AuthPage() {
                     className="w-full"
                     disabled={loginMutation.isPending}
                   >
-                    {loginMutation.isPending ? "Logging in..." : "Login"}
+                    {loginMutation.isPending ? t("loggingIn") : t("login")}
                   </Button>
                 </form>
               </TabsContent>
@@ -83,7 +89,7 @@ export default function AuthPage() {
                   className="space-y-4"
                 >
                   <div className="space-y-2">
-                    <Label htmlFor="reg-username">Username</Label>
+                    <Label htmlFor="reg-username">{t("username")}</Label>
                     <Input
                       id="reg-username"
                       {...registerForm.register("username")}
@@ -91,7 +97,7 @@ export default function AuthPage() {
                     />
                   </div>
                   <div className="space-y-2">
-                    <Label htmlFor="reg-password">Password</Label>
+                    <Label htmlFor="reg-password">{t("password")}</Label>
                     <Input
                       id="reg-password"
                       type="password"
@@ -104,7 +110,7 @@ export default function AuthPage() {
                     className="w-full"
                     disabled={registerMutation.isPending}
                   >
-                    {registerMutation.isPending ? "Creating account..." : "Register"}
+                    {registerMutation.isPending ? t("creatingAccount") : t("createAccount")}
                   </Button>
                 </form>
               </TabsContent>
@@ -117,11 +123,10 @@ export default function AuthPage() {
         <div className="max-w-md mx-auto space-y-6">
           <Building className="h-12 w-12 text-primary mx-auto" />
           <h2 className="text-3xl font-bold text-center text-primary">
-            Secure Money Transfers
+            {t("secureTransfers")}
           </h2>
           <p className="text-center text-muted-foreground">
-            Send money to friends and family securely and instantly. Create an
-            account or login to get started with digital transfers today.
+            {t("transferDescription")}
           </p>
         </div>
       </div>

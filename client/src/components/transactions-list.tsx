@@ -17,8 +17,11 @@ import { Transaction, Account } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { format } from "date-fns";
 import { ClockIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function TransactionsList() {
+  const { t } = useTranslation();
+
   const { data: account } = useQuery<Account>({
     queryKey: ["/api/account"],
   });
@@ -31,7 +34,7 @@ export default function TransactionsList() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Recent Transactions</CardTitle>
+          <CardTitle>{t("recentTransactions")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Skeleton className="h-[300px] w-full" />
@@ -45,16 +48,16 @@ export default function TransactionsList() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <ClockIcon className="h-5 w-5" />
-          Recent Transactions
+          {t("recentTransactions")}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
-              <TableHead>Date</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Amount</TableHead>
+              <TableHead>{t("date")}</TableHead>
+              <TableHead>{t("description")}</TableHead>
+              <TableHead className="text-right">{t("amount")}</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -77,7 +80,7 @@ export default function TransactionsList() {
             {(!transactions || transactions.length === 0) && (
               <TableRow>
                 <TableCell colSpan={3} className="text-center text-muted-foreground">
-                  No transactions yet
+                  {t("noTransactions")}
                 </TableCell>
               </TableRow>
             )}

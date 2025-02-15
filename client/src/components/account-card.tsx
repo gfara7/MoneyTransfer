@@ -3,8 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 import { Account } from "@shared/schema";
 import { Skeleton } from "@/components/ui/skeleton";
 import { WalletIcon } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export default function AccountCard() {
+  const { t } = useTranslation();
   const { data: account, isLoading } = useQuery<Account>({
     queryKey: ["/api/account"],
   });
@@ -13,7 +15,7 @@ export default function AccountCard() {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Your Account</CardTitle>
+          <CardTitle>{t("yourAccount")}</CardTitle>
         </CardHeader>
         <CardContent>
           <Skeleton className="h-8 w-32" />
@@ -27,17 +29,17 @@ export default function AccountCard() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <WalletIcon className="h-5 w-5" />
-          Your Account
+          {t("yourAccount")}
         </CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-2">
-          <p className="text-sm text-muted-foreground">Current Balance</p>
+          <p className="text-sm text-muted-foreground">{t("currentBalance")}</p>
           <p className="text-3xl font-bold">
             {account?.currency} ${parseFloat(account?.balance || "0").toFixed(2)}
           </p>
           <p className="text-sm text-muted-foreground">
-            Account Number: {account?.accountNumber}
+            {t("accountNumber")}: {account?.accountNumber}
           </p>
         </div>
       </CardContent>
