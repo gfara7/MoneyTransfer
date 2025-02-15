@@ -1,9 +1,13 @@
-import { Account, InsertUser, Transaction, User } from "@shared/schema";
+import { accounts, transactions, users } from "@shared/schema";
+import type { Account, InsertUser, Transaction, User } from "@shared/schema";
+import { db } from "./db";
+import { eq, or } from "drizzle-orm";
 import session from "express-session";
-import createMemoryStore from "memorystore";
-import { randomUUID } from "crypto";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
+import crypto from 'crypto';
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -20,80 +24,72 @@ export interface IStorage {
   sessionStore: session.Store;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private accounts: Map<number, Account>;
-  private transactions: Transaction[];
+export class DatabaseStorage implements IStorage {
   readonly sessionStore: session.Store;
-  private currentId: number;
 
   constructor() {
-    this.users = new Map();
-    this.accounts = new Map();
-    this.transactions = [];
-    this.currentId = 1;
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user: User = { ...insertUser, id };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async getAccount(userId: number): Promise<Account | undefined> {
-    return Array.from(this.accounts.values()).find(
-      (account) => account.userId === userId,
-    );
+    const [account] = await db.select().from(accounts).where(eq(accounts.userId, userId));
+    return account;
   }
 
   async createAccount(userId: number): Promise<Account> {
-    const id = this.currentId++;
-    const account: Account = {
-      id,
-      userId,
-      balance: "0",
-      accountNumber: randomUUID(),
-    };
-    this.accounts.set(id, account);
+    const [account] = await db.insert(accounts)
+      .values({
+        userId,
+        balance: "0",
+        currency: "USD",
+        accountNumber: crypto.randomUUID(),
+      })
+      .returning();
     return account;
   }
 
   async updateBalance(accountId: number, newBalance: string): Promise<void> {
-    const account = this.accounts.get(accountId);
-    if (!account) throw new Error("Account not found");
-    this.accounts.set(accountId, { ...account, balance: newBalance });
+    await db.update(accounts)
+      .set({ balance: newBalance })
+      .where(eq(accounts.id, accountId));
   }
 
   async createTransaction(transaction: Omit<Transaction, "id" | "createdAt">): Promise<Transaction> {
-    const id = this.currentId++;
-    const newTransaction: Transaction = {
-      ...transaction,
-      id,
-      createdAt: new Date(),
-    };
-    this.transactions.push(newTransaction);
+    const [newTransaction] = await db.insert(transactions)
+      .values(transaction)
+      .returning();
     return newTransaction;
   }
 
   async getTransactions(accountId: number): Promise<Transaction[]> {
-    return this.transactions.filter(
-      (t) => t.fromAccountId === accountId || t.toAccountId === accountId,
-    );
+    return db.select()
+      .from(transactions)
+      .where(
+        or(
+          eq(transactions.fromAccountId, accountId),
+          eq(transactions.toAccountId, accountId)
+        )
+      )
+      .orderBy(transactions.createdAt);
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
