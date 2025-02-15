@@ -70,7 +70,7 @@ export default function TransactionsList() {
                     : "text-green-500"
                 }`}>
                   {transaction.fromAccountId === account?.id ? "-" : "+"}
-                  ${transaction.amount.toFixed(2)}
+                  ${parseFloat(transaction.amount).toFixed(2)}
                 </TableCell>
               </TableRow>
             ))}
