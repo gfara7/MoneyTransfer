@@ -43,6 +43,16 @@ export default function TransactionsList() {
     );
   }
 
+  const getTransactionDisplay = (transaction: Transaction) => {
+    const isDeposit = transaction.fromAccountId === transaction.toAccountId;
+    const isOutgoing = transaction.fromAccountId === account?.id && !isDeposit;
+
+    return {
+      color: isOutgoing ? "text-red-500" : "text-green-500",
+      sign: isOutgoing ? "-" : "+",
+    };
+  };
+
   return (
     <Card>
       <CardHeader>
@@ -61,22 +71,20 @@ export default function TransactionsList() {
             </TableRow>
           </TableHeader>
           <TableBody>
-            {transactions?.map((transaction) => (
-              <TableRow key={transaction.id}>
-                <TableCell>
-                  {format(new Date(transaction.createdAt), "MMM d, yyyy")}
-                </TableCell>
-                <TableCell>{transaction.description}</TableCell>
-                <TableCell className={`text-right ${
-                  transaction.fromAccountId === account?.id
-                    ? "text-red-500"
-                    : "text-green-500"
-                }`}>
-                  {transaction.fromAccountId === account?.id ? "-" : "+"}
-                  ${parseFloat(transaction.amount).toFixed(2)}
-                </TableCell>
-              </TableRow>
-            ))}
+            {transactions?.map((transaction) => {
+              const { color, sign } = getTransactionDisplay(transaction);
+              return (
+                <TableRow key={transaction.id}>
+                  <TableCell>
+                    {format(new Date(transaction.createdAt), "MMM d, yyyy")}
+                  </TableCell>
+                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell className={`text-right ${color}`}>
+                    {sign}${parseFloat(transaction.amount).toFixed(2)}
+                  </TableCell>
+                </TableRow>
+              );
+            })}
             {(!transactions || transactions.length === 0) && (
               <TableRow>
                 <TableCell colSpan={3} className="text-center text-muted-foreground">
