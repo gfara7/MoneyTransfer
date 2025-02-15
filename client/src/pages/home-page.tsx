@@ -3,9 +3,12 @@ import AccountCard from "@/components/account-card";
 import TransferForm from "@/components/transfer-form";
 import TransactionsList from "@/components/transactions-list";
 import { Button } from "@/components/ui/button";
+import { useTranslation } from "react-i18next";
+import LanguageSwitcher from "@/components/language-switcher";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-background">
@@ -14,14 +17,15 @@ export default function HomePage() {
           <h1 className="text-xl font-semibold">MoneyTransfer</h1>
           <div className="flex items-center gap-4">
             <span className="text-muted-foreground">
-              Welcome, {user?.username}
+              {t('welcome_user', { username: user?.username })}
             </span>
+            <LanguageSwitcher />
             <Button
               variant="outline"
               onClick={() => logoutMutation.mutate()}
               disabled={logoutMutation.isPending}
             >
-              {logoutMutation.isPending ? "Logging out..." : "Logout"}
+              {logoutMutation.isPending ? t('loggingOut') : t('logout')}
             </Button>
           </div>
         </div>
