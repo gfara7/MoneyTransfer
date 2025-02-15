@@ -5,6 +5,7 @@ import TransactionsList from "@/components/transactions-list";
 import { Button } from "@/components/ui/button";
 import { useTranslation } from "react-i18next";
 import LanguageSwitcher from "@/components/language-switcher";
+import DepositForm from "@/components/deposit-form";
 
 export default function HomePage() {
   const { user, logoutMutation } = useAuth();
@@ -35,6 +36,7 @@ export default function HomePage() {
         <div className="grid gap-8 md:grid-cols-2">
           <div className="space-y-8">
             <AccountCard />
+            <DepositForm />
             <TransferForm />
           </div>
           <div>

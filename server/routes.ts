@@ -107,6 +107,47 @@ export async function registerRoutes(app: Express): Promise<Server> {
     }
   });
 
+  app.post("/api/deposit", async (req, res) => {
+    if (!req.isAuthenticated()) return res.sendStatus(401);
+
+    try {
+      const { amount, currency } = req.body;
+      const parsedAmount = parseFloat(amount);
+
+      if (parsedAmount <= 0) {
+        return res.status(400).send("Invalid amount");
+      }
+
+      const account = await storage.getAccount(req.user.id);
+      if (!account) return res.status(404).send("Account not found");
+
+      // Convert amount to account's currency if needed
+      const convertedAmount = convertCurrency(parsedAmount, currency, account.currency);
+
+      const newBalance = (parseFloat(account.balance) + convertedAmount).toFixed(2);
+      await storage.updateBalance(account.id, newBalance);
+
+      // Create a deposit transaction
+      const transaction = await storage.createTransaction({
+        fromAccountId: account.id, // same account for deposit
+        toAccountId: account.id,
+        amount: parsedAmount.toFixed(2),
+        fromCurrency: currency,
+        toCurrency: account.currency,
+        exchangeRate: (convertedAmount / parsedAmount).toString(),
+        description: "Deposit",
+      });
+
+      res.json(transaction);
+    } catch (error) {
+      if (error instanceof ZodError) {
+        res.status(400).json(error.errors);
+      } else {
+        throw error;
+      }
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }

@@ -53,6 +53,12 @@ i18n
           "recentTransactions": "Recent Transactions",
           "date": "Date",
           "noTransactions": "No transactions yet",
+          // New translations
+          "deposit": "Deposit",
+          "depositing": "Depositing...",
+          "depositSuccess": "Deposit successful",
+          "depositSuccessMessage": "Your money has been added to your account",
+          "depositFailed": "Deposit failed"
         }
       },
       ar: {
@@ -94,6 +100,12 @@ i18n
           "recentTransactions": "المعاملات الأخيرة",
           "date": "التاريخ",
           "noTransactions": "لا توجد معاملات حتى الآن",
+          // New translations
+          "deposit": "إيداع",
+          "depositing": "جاري الإيداع...",
+          "depositSuccess": "تم الإيداع بنجاح",
+          "depositSuccessMessage": "تم إضافة المال إلى حسابك",
+          "depositFailed": "فشل الإيداع"
         }
       }
     }
