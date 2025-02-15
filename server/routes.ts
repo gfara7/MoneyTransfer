@@ -95,6 +95,8 @@ export async function registerRoutes(app: Express): Promise<Server> {
         toCurrency: toAccount.currency,
         exchangeRate: exchangeRate.toString(),
         description: transfer.description || "Transfer",
+        pickupLocation: transfer.pickupLocation,
+        transferMethod: transfer.transferMethod,
       });
 
       res.json(transaction);
@@ -111,7 +113,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
     if (!req.isAuthenticated()) return res.sendStatus(401);
 
     try {
-      const { amount, currency } = req.body;
+      const { amount, currency, transferMethod, cardNumber, bankName } = req.body;
       const parsedAmount = parseFloat(amount);
 
       if (parsedAmount <= 0) {
@@ -129,13 +131,16 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
       // Create a deposit transaction
       const transaction = await storage.createTransaction({
-        fromAccountId: account.id, // same account for deposit
+        fromAccountId: account.id,
         toAccountId: account.id,
         amount: parsedAmount.toFixed(2),
         fromCurrency: currency,
         toCurrency: account.currency,
         exchangeRate: (convertedAmount / parsedAmount).toString(),
-        description: "Deposit",
+        description: `Deposit via ${transferMethod}${
+          cardNumber ? ` (Card: ${cardNumber.slice(-4)})` : ""
+        }${bankName ? ` (Bank: ${bankName})` : ""}`,
+        transferMethod,
       });
 
       res.json(transaction);

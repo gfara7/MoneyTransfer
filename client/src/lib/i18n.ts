@@ -58,7 +58,45 @@ i18n
           "depositing": "Depositing...",
           "depositSuccess": "Deposit successful",
           "depositSuccessMessage": "Your money has been added to your account",
-          "depositFailed": "Deposit failed"
+          "depositFailed": "Deposit failed",
+          // New translations for deposit methods
+          "cash": "Cash",
+          "creditCard": "Credit Card",
+          "bankTransfer": "Bank Transfer",
+          "cardNumber": "Card Number",
+          "expiryDate": "Expiry Date",
+          "bankName": "Bank Name",
+          "swiftCode": "SWIFT Code",
+          "selectPaymentMethod": "Select Payment Method",
+
+          // Pickup locations
+          "pickupLocation": "Pickup Location",
+          "selectPickupLocation": "Select Pickup Location",
+          "pickupLocationDescription": "Select where the recipient can collect the money",
+          "transferMethod": "Transfer Method",
+          "selectTransferMethod": "Select Transfer Method",
+
+          // Bank transfer
+          "bankTransferInstructions": "Bank Transfer Instructions",
+          "bankTransferDescription": "Please transfer the money to the following bank account",
+
+          // Credit card
+          "creditCardInstructions": "Credit Card Payment",
+          "creditCardDescription": "Enter your credit card details to complete the deposit",
+
+          // Success messages
+          "transferSuccess": "Transfer Successful",
+          "transferSuccessMessage": "Money has been transferred successfully. The recipient can collect it from the selected location.",
+          "depositSuccess": "Deposit Successful",
+          "depositSuccessMessage": "Your money has been added to your account",
+          "depositFailed": "Deposit Failed",
+
+          // Locations
+          "Damascus": "Damascus",
+          "Aleppo": "Aleppo",
+          "Rif-Dimashk": "Rif-Dimashk",
+          "Lattakia": "Lattakia",
+          "Homs": "Homs"
         }
       },
       ar: {
@@ -105,7 +143,45 @@ i18n
           "depositing": "جاري الإيداع...",
           "depositSuccess": "تم الإيداع بنجاح",
           "depositSuccessMessage": "تم إضافة المال إلى حسابك",
-          "depositFailed": "فشل الإيداع"
+          "depositFailed": "فشل الإيداع",
+          // New translations for deposit methods
+          "cash": "نقداً",
+          "creditCard": "بطاقة ائتمان",
+          "bankTransfer": "حوالة مصرفية",
+          "cardNumber": "رقم البطاقة",
+          "expiryDate": "تاريخ الانتهاء",
+          "bankName": "اسم البنك",
+          "swiftCode": "رمز السويفت",
+          "selectPaymentMethod": "اختر طريقة الدفع",
+
+          // Pickup locations
+          "pickupLocation": "موقع الاستلام",
+          "selectPickupLocation": "اختر موقع الاستلام",
+          "pickupLocationDescription": "اختر المكان الذي يمكن للمستلم استلام الأموال منه",
+          "transferMethod": "طريقة التحويل",
+          "selectTransferMethod": "اختر طريقة التحويل",
+
+          // Bank transfer
+          "bankTransferInstructions": "تعليمات التحويل المصرفي",
+          "bankTransferDescription": "يرجى تحويل الأموال إلى الحساب المصرفي التالي",
+
+          // Credit card
+          "creditCardInstructions": "الدفع ببطاقة الائتمان",
+          "creditCardDescription": "أدخل تفاصيل بطاقة الائتمان لإكمال الإيداع",
+
+          // Success messages
+          "transferSuccess": "تم التحويل بنجاح",
+          "transferSuccessMessage": "تم تحويل الأموال بنجاح. يمكن للمستلم استلامها من الموقع المحدد.",
+          "depositSuccess": "تم الإيداع بنجاح",
+          "depositSuccessMessage": "تمت إضافة الأموال إلى حسابك",
+          "depositFailed": "فشل الإيداع",
+
+          // Locations
+          "Damascus": "دمشق",
+          "Aleppo": "حلب",
+          "Rif-Dimashk": "ريف دمشق",
+          "Lattakia": "اللاذقية",
+          "Homs": "حمص"
         }
       }
     }
