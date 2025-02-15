@@ -34,7 +34,7 @@ export default function AccountCard() {
         <div className="space-y-2">
           <p className="text-sm text-muted-foreground">Current Balance</p>
           <p className="text-3xl font-bold">
-            ${parseFloat(account?.balance || "0").toFixed(2)}
+            {account?.currency} ${parseFloat(account?.balance || "0").toFixed(2)}
           </p>
           <p className="text-sm text-muted-foreground">
             Account Number: {account?.accountNumber}

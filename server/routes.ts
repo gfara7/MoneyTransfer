@@ -5,6 +5,19 @@ import { storage } from "./storage";
 import { transferSchema } from "@shared/schema";
 import { ZodError } from "zod";
 
+// Mock exchange rates (in production, this would come from an external API)
+const EXCHANGE_RATES = {
+  USD: 1,
+  EUR: 0.93,
+  SYP: 2500,
+};
+
+function convertCurrency(amount: number, fromCurrency: string, toCurrency: string): number {
+  const fromRate = EXCHANGE_RATES[fromCurrency as keyof typeof EXCHANGE_RATES];
+  const toRate = EXCHANGE_RATES[toCurrency as keyof typeof EXCHANGE_RATES];
+  return (amount * toRate) / fromRate;
+}
+
 export async function registerRoutes(app: Express): Promise<Server> {
   setupAuth(app);
 
@@ -26,6 +39,20 @@ export async function registerRoutes(app: Express): Promise<Server> {
 
     const transactions = await storage.getTransactions(account.id);
     res.json(transactions);
+  });
+
+  app.get("/api/exchange-rate", async (req, res) => {
+    const { from, to } = req.query;
+    if (!from || !to) {
+      return res.status(400).send("Missing currency parameters");
+    }
+
+    const rate = convertCurrency(1, from as string, to as string);
+    res.json({
+      fromCurrency: from,
+      toCurrency: to,
+      rate,
+    });
   });
 
   app.post("/api/transfer", async (req, res) => {
@@ -50,13 +77,23 @@ export async function registerRoutes(app: Express): Promise<Server> {
         return res.status(400).send("Insufficient funds");
       }
 
+      // Convert amount to recipient's currency
+      const exchangeRate = convertCurrency(1, fromAccount.currency, toAccount.currency);
+      const convertedAmount = amount * exchangeRate;
+
       await storage.updateBalance(fromAccount.id, (fromBalance - amount).toFixed(2));
-      await storage.updateBalance(toAccount.id, (parseFloat(toAccount.balance) + amount).toFixed(2));
+      await storage.updateBalance(
+        toAccount.id,
+        (parseFloat(toAccount.balance) + convertedAmount).toFixed(2)
+      );
 
       const transaction = await storage.createTransaction({
         fromAccountId: fromAccount.id,
         toAccountId: toAccount.id,
         amount: amount.toFixed(2),
+        fromCurrency: fromAccount.currency,
+        toCurrency: toAccount.currency,
+        exchangeRate: exchangeRate.toString(),
         description: transfer.description || "Transfer",
       });
 
