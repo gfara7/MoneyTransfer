@@ -32,7 +32,7 @@ i18n
           "welcome_user": "Welcome, {{username}}",
           "logout": "Logout",
           "loggingOut": "Logging out...",
-          
+
           // Account Card
           "yourAccount": "Your Account",
           "currentBalance": "Current Balance",
@@ -53,13 +53,10 @@ i18n
           "recentTransactions": "Recent Transactions",
           "date": "Date",
           "noTransactions": "No transactions yet",
-          // New translations
+
+          // Deposit related
           "deposit": "Deposit",
           "depositing": "Depositing...",
-          "depositSuccess": "Deposit successful",
-          "depositSuccessMessage": "Your money has been added to your account",
-          "depositFailed": "Deposit failed",
-          // New translations for deposit methods
           "cash": "Cash",
           "creditCard": "Credit Card",
           "bankTransfer": "Bank Transfer",
@@ -84,7 +81,7 @@ i18n
           "creditCardInstructions": "Credit Card Payment",
           "creditCardDescription": "Enter your credit card details to complete the deposit",
 
-          // Success messages
+          // Success/Error messages
           "transferSuccess": "Transfer Successful",
           "transferSuccessMessage": "Money has been transferred successfully. The recipient can collect it from the selected location.",
           "depositSuccess": "Deposit Successful",
@@ -138,13 +135,10 @@ i18n
           "recentTransactions": "المعاملات الأخيرة",
           "date": "التاريخ",
           "noTransactions": "لا توجد معاملات حتى الآن",
-          // New translations
+
+          // Deposit related
           "deposit": "إيداع",
           "depositing": "جاري الإيداع...",
-          "depositSuccess": "تم الإيداع بنجاح",
-          "depositSuccessMessage": "تم إضافة المال إلى حسابك",
-          "depositFailed": "فشل الإيداع",
-          // New translations for deposit methods
           "cash": "نقداً",
           "creditCard": "بطاقة ائتمان",
           "bankTransfer": "حوالة مصرفية",
@@ -169,7 +163,7 @@ i18n
           "creditCardInstructions": "الدفع ببطاقة الائتمان",
           "creditCardDescription": "أدخل تفاصيل بطاقة الائتمان لإكمال الإيداع",
 
-          // Success messages
+          // Success/Error messages
           "transferSuccess": "تم التحويل بنجاح",
           "transferSuccessMessage": "تم تحويل الأموال بنجاح. يمكن للمستلم استلامها من الموقع المحدد.",
           "depositSuccess": "تم الإيداع بنجاح",

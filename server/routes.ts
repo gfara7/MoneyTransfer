@@ -95,7 +95,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         toCurrency: toAccount.currency,
         exchangeRate: exchangeRate.toString(),
         description: transfer.description || "Transfer",
-        pickupLocation: transfer.pickupLocation,
+        pickupLocation: transfer.pickupLocation || null,
         transferMethod: transfer.transferMethod,
       });
 
@@ -141,6 +141,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
           cardNumber ? ` (Card: ${cardNumber.slice(-4)})` : ""
         }${bankName ? ` (Bank: ${bankName})` : ""}`,
         transferMethod,
+        pickupLocation: null,
       });
 
       res.json(transaction);
